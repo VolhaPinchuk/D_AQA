@@ -5,10 +5,10 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO0012Cest extends BaseActions
+class DashSO00121Cest extends BaseActions
 {
-    //mark ones as grey
-    public function markonesgrey(DashAcceptanceTester $I)
+    //mark ones for Lead as grey
+    public function markonesgreylead(DashAcceptanceTester $I)
     {
         $I->amOnPage('/');
 
@@ -31,6 +31,16 @@ class DashSO0012Cest extends BaseActions
         $selectedShow = $this->varShow();
         $I->click($selectedShow);
         $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+
+        $total = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
+        $i = 0;
+        $b = null;
+        while ($a != '/'):
+            $a = $total[$i];
+            $b = $b . $a;
+            $i++;
+        endwhile;
+        $d1 = substr($total, $i);
 
         //find number of the end position in the first department
         $i=2;
@@ -59,13 +69,31 @@ class DashSO0012Cest extends BaseActions
         $I->click($line);
         $I->click('//*[@class="modal-dialog"]//button[contains(text(), "Confirm")]');
 
+        $totalAfterAddMark = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
+
+        //assert total did not change after add mark
+        $I->assertEquals($total, $totalAfterAddMark, 'Total changed after add mark');
+
         //save mark
         $I->click(Locator::contains('button', 'File'));
         $I->click(Locator::contains('span', 'Save'));
         $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 40);
 
         //check mark was saved
-        $I->click('.item__info__expand-icon');
-        $I->seeElement('((//*[contains(@class, "item_artist")])[1]//*[contains(@class, "row__cell")])[7]/*[contains(@class, "not-actualised")]');
+        $totalAfterSave = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
+        $i = 0;
+        $c = null;
+        while ($a != '/'):
+            $a = $totalAfterSave[$i];
+            $c = $c . $a;
+            $i++;
+        endwhile;
+        $c = $c-1;
+        $d2 = substr($totalAfterSave, $i);
+
+        //assert total changed and the difference is equal 1
+        $I->assertNotEquals($total, $totalAfterSave, 'Total was not changed');
+        $I->assertEquals($b, $c, 'The difference is not equal 1');
+        $I->assertEquals($d1, $d2, 'Other part of total was not changed');
     }
 }
