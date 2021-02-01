@@ -42,7 +42,6 @@ class DashAcceptanceTester extends AcceptanceTester
     public function selectScenario(){
         $this->click('.show-ones__header-select:nth-child(4)');
         $scenario = $this->scenarioForTests;
-        $I->click($scenario);
         return $scenario;
     }
 
