@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00117Cest extends BaseActions
+class DashSO00117Cest
 {
     //add all positions
     public function addallpositions(DashAcceptanceTester $I)
@@ -21,7 +21,6 @@ class DashSO00117Cest extends BaseActions
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();
@@ -57,6 +56,7 @@ class DashSO00117Cest extends BaseActions
         $I->fillField('(//input[contains(@id,"VInput")])[3]', '1');
 
         $I->click('//*[@id="AddPositionPopup"]//button[contains(text(), "Add")]');
+        $I->click('.item__info__expand-icon');
 
         //find added positions
         $atr1=$I->grabAttributeFrom($position, 'class');
@@ -74,10 +74,7 @@ class DashSO00117Cest extends BaseActions
         $I->assertContains('item_artist', $atr2, 'Position was not added');
         $I->assertContains('item_artist', $atr3, 'Position was not added');
 
-
         //check title of added positions
-        $I->click('.item__info__expand-icon');
-        $I->loader();
         $x=$i-1;
         $seniority='(//*[@class="item__info__seniority"])[' . $x . ']';
         $positionValue1=$I->grabTextFrom($seniority);

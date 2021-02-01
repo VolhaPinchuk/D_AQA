@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00192Cest extends BaseActions
+class DashSO00192Cest
 {
     protected $helper = null;
 
@@ -28,7 +28,6 @@ class DashSO00192Cest extends BaseActions
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();

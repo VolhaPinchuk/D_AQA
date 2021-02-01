@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00121Cest extends BaseActions
+class DashSO00121Cest
 {
     //mark ones for Lead as grey
     public function markonesgreylead(DashAcceptanceTester $I)
@@ -21,7 +21,6 @@ class DashSO00121Cest extends BaseActions
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();
@@ -30,11 +29,13 @@ class DashSO00121Cest extends BaseActions
         $total = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
         $i = 0;
         $b = null;
+        $a = null;
         while ($a != '/'):
             $a = $total[$i];
             $b = $b . $a;
             $i++;
         endwhile;
+        $b = intval($b);
         $d1 = substr($total, $i);
 
         //find number of the end position in the first department
@@ -78,12 +79,13 @@ class DashSO00121Cest extends BaseActions
         $totalAfterSave = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
         $i = 0;
         $c = null;
+        $a = null;
         while ($a != '/'):
             $a = $totalAfterSave[$i];
             $c = $c . $a;
             $i++;
         endwhile;
-        $c = $c-1;
+        $c = intval($c)-1;
         $d2 = substr($totalAfterSave, $i);
 
         //assert total changed and the difference is equal 1

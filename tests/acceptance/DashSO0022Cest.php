@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO0022Cest extends BaseActions
+class DashSO0022Cest
 {
     protected $helper = null;
 
@@ -28,7 +28,6 @@ class DashSO0022Cest extends BaseActions
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();
@@ -37,11 +36,9 @@ class DashSO0022Cest extends BaseActions
         //select calendar period
         $I->waitForElementVisible('.form-control.reportrange-text', 20);
         $I->click('.form-control.reportrange-text');
-        $I->loader();
         $I->waitForElementVisible('.calendars-container');
         $I->click('//*[contains(@class, "left")]//tr[3]/td[1]');
         $I->click('//*[contains(@class, "right")]//tr[6]/td[7]');
-        $I->loader();
 
         //grab dates info
         $startDate=$I->grabTextFrom('//*[contains(@class, "left")]//tr[3]/td[1]');
@@ -60,7 +57,7 @@ class DashSO0022Cest extends BaseActions
 
         $I->click(Locator::contains('button', 'Confirm'));
         $I->click(Locator::contains('button', 'Apply'));
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $I->loader();
 
         //grab months from the table
         $elementsMonth = $this->helper->findElements('.header__month-name');

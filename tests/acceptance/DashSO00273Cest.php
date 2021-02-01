@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00273Cest extends BaseActions
+class DashSO00273Cest
 {
     //Move ones back one week
     public function moveonesbackoneweek(DashAcceptanceTester $I)
@@ -21,7 +21,6 @@ class DashSO00273Cest extends BaseActions
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();
@@ -52,7 +51,6 @@ class DashSO00273Cest extends BaseActions
         $ones='((//*[contains(@class, "item_artist")])[' . $x . ']//*[contains(@class, "row__cell")])[7]';
         $I->click($ones);
         $I->click(Locator::contains('button', 'Confirm'));
-        $I->wait(10);
 
         //Move ones
         $I->click($ones);

@@ -12,7 +12,11 @@ trait AcceptanceTesterActions
      */
     abstract protected function getScenario();
 
-    
+    public function fail($message = "") {
+        return $this->getScenario()->runStep(new \Codeception\Step\Action('fail', func_get_args()));
+    }
+
+
     /**
      * [!] Method is generated. Documentation taken from corresponding module.
      *

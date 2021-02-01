@@ -21,13 +21,12 @@ class DashSO0016Cest
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();
         $I->loader();
 
-        $defaultScenarioName = $I->grabTextFrom('.show-ones__header-select:nth-child(4)');
+        $defaultScenarioName = $I->grabTextFrom('(//*[@class="show-ones__header-select"])[2]');
 
         //assert default scenario is MASTER
         $I->assertContains('MASTER', $defaultScenarioName, 'Another scenario is shown as default');

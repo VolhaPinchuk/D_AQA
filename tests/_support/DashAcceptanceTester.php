@@ -7,8 +7,8 @@ use Helper\Acceptance;
 
 class DashAcceptanceTester extends AcceptanceTester
 {
-    protected $showForTests = 'A-LIB';
-    protected $scenarioForTests = '123';
+    protected $showForTests = 'SAS1';
+    protected $scenarioForTests = 'MASTER';
 
     public function login($username, $password){
         $this->fillField('#UserName',$username);
@@ -22,7 +22,7 @@ class DashAcceptanceTester extends AcceptanceTester
     }
 
     public function showOnesPage(){
-        $this->waitForElementVisible(Locator::contains('span', 'Show Ones'), 20);
+        $this->waitForElementClickable(Locator::contains('span', 'Show Ones'), 20);
         $this->wait(1);
         $this->click(Locator::contains('span', 'Show Ones'));
     }
@@ -32,15 +32,15 @@ class DashAcceptanceTester extends AcceptanceTester
     }
 
     public function selectShow(){
-        $this->waitForElementVisible('.show-ones__header-select:nth-child(2)');
-        $this->click('.show-ones__header-select:nth-child(2)');
+        $this->waitForElementClickable('(//*[@class="show-ones__header-select"])[1]', 40);
+        $this->click('(//*[@class="show-ones__header-select"])[1]');
         $show = $this->showForTests;
         $this->click($show);
         return $show;
     }
 
     public function selectScenario(){
-        $this->click('.show-ones__header-select:nth-child(4)');
+        $this->click('(//*[@class="show-ones__header-select"])[2]');
         $scenario = $this->scenarioForTests;
         return $scenario;
     }
@@ -57,8 +57,7 @@ class DashAcceptanceTester extends AcceptanceTester
         }
     }
 
-    public function assertNotEquals($a, $b, $text)
-    {
+    public function assertNotEquals($a, $b, $text){
         if ($a == $b) {
             $this->fail($text);
         }

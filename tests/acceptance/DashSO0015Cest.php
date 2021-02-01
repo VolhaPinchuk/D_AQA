@@ -21,13 +21,12 @@ class DashSO0015Cest
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();
         $I->loader();
 
-        $showName = $I->grabTextFrom('.show-ones__header-select:nth-child(2)');
+        $showName = $I->grabTextFrom('(//*[@class="show-ones__header-select"])[1]');
 
         //assert selected show is opened
         $I->assertContains($show, $showName, 'Another show is shown');

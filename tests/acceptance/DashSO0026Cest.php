@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO0026Cest extends BaseActions
+class DashSO0026Cest
 {
     //Remove Ones from the grid
     public function removeones(DashAcceptanceTester $I)
@@ -21,7 +21,6 @@ class DashSO0026Cest extends BaseActions
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();
@@ -53,7 +52,9 @@ class DashSO0026Cest extends BaseActions
         //add grey mark
         $x=$i-1;
         $line='((//*[contains(@class, "item_artist")])[' . $x . ']//*[contains(@class, "row__cell")])[7]';
+        $I->waitForElementVisible($line);
         $I->click($line);
+        $I->waitForElementClickable(Locator::contains('button', 'Confirm'));
         $I->click('//*[@class="modal-dialog"]//button[contains(text(), "Confirm")]');
         $I->click(Locator::contains('button', 'File'));
         $I->click(Locator::contains('span', 'Save'));

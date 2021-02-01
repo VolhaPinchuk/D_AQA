@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO0017Cest extends BaseActions
+class DashSO0017Cest
 {
     //select scenario
     public function selectscenario(DashAcceptanceTester $I)
@@ -21,7 +21,6 @@ class DashSO0017Cest extends BaseActions
 
         //open Ones tab
         $I->onesTab();
-        $I->loader();
 
         //select show
         $show = $I->selectShow();
@@ -29,9 +28,9 @@ class DashSO0017Cest extends BaseActions
 
         //select scenario
         $scenario = $I->selectScenario();
-        $I->loader();
+//        $I->loader(); //need if scenario is not MASTER
 
-        $scenarioName = $I->grabTextFrom('.show-ones__header-select:nth-child(4)');
+        $scenarioName = $I->grabTextFrom('(//*[@class="show-ones__header-select"])[2]');
 
         //assert selected scenario is opened
         $I->assertContains($scenario, $scenarioName, 'Another scenario is shown');
