@@ -15,22 +15,17 @@ class DashSO0026Cest extends BaseActions
         //login as show
         $I->login('show', 'show');
 
+        //open Show Ones page
+        $I->showOnesPage();
+        $I->loader();
+
         //open Ones tab
-        $I->waitForElementVisible(Locator::contains('span', 'Show Ones'), 20);
-        $I->wait(1);
-        $I->click(Locator::contains('span', 'Show Ones'));
-        $I->waitForElementVisible('.request-progress-bar__wrapper.wave-loader', 20);
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
-        $I->click('//*[@class="VTab__header"]//*[contains(text(),"Ones")]');
-        $I->waitForElementVisible('.request-progress-bar__wrapper.wave-loader', 20);
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $I->onesTab();
+        $I->loader();
 
         //select show
-        $I->waitForElementVisible('.show-ones__header-select:nth-child(2)');
-        $I->click('.show-ones__header-select:nth-child(2)');
-        $selectedShow = $this->varShow();
-        $I->click($selectedShow);
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $show = $I->selectShow();
+        $I->loader();
 
         $total = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
 
@@ -62,21 +57,22 @@ class DashSO0026Cest extends BaseActions
         $I->click('//*[@class="modal-dialog"]//button[contains(text(), "Confirm")]');
         $I->click(Locator::contains('button', 'File'));
         $I->click(Locator::contains('span', 'Save'));
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $I->loader();
 
         //remove mark
         for ($a = 1; $a <= $x; $a++){
-            $item = '(((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[7]/*[contains(@class, "W")])[1]';
-            $itemClass = $I->grabAttributeFrom($item, 'class');
-            if (strpos($itemClass, 'statusId') !== false) {
-                $I->click($item);
+            $item = '((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[7]/*[contains(@class, "W")]';
+            $itemIsHere = $I->elementIsHere($item);
+            if ($itemIsHere !== false) {
+                $I->click('((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[7]');
                 $a = $x+1;
                 $I->waitForElementVisible(Locator::contains('button', 'Remove Ones'));
                 $I->click(Locator::contains('button', 'Remove Ones'));
                 $I->click(Locator::contains('button', 'Confirm'));
+                $I->waitForElementNotVisible('.toast-message');
                 $I->click(Locator::contains('button', 'File'));
                 $I->click(Locator::contains('span', 'Save'));
-                $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+                $I->loader();
             }
         }
         $totalAfterRemove = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');

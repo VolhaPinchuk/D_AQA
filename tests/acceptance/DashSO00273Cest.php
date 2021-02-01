@@ -5,10 +5,10 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00113Cest extends BaseActions
+class DashSO00273Cest extends BaseActions
 {
-    //add position artist
-    public function addpositionartist(DashAcceptanceTester $I)
+    //Move ones back one week
+    public function moveonesbackoneweek(DashAcceptanceTester $I)
     {
         $I->amOnPage('/');
 
@@ -42,29 +42,30 @@ class DashSO00113Cest extends BaseActions
         $I->waitForElementVisible('#AddPositionPopup', 20);
 
         //add position Lead
-        $I->click('(//*[@id="AddPositionPopup"]//*[contains(@class,"ui-checkbox")])[3]');
+        $I->click('(//*[@id="AddPositionPopup"]//*[contains(@class,"ui-checkbox")])[1]');
         $I->waitForElementVisible('(//input[contains(@id,"VInput")])[1]');
         $I->fillField('(//input[contains(@id,"VInput")])[1]', '1');
-
         $I->click('//*[@id="AddPositionPopup"]//button[contains(text(), "Add")]');
 
-        //find added position
-        $atr=$I->grabAttributeFrom($position, 'class');
-
-        //assert position was added
-        $I->assertContains('item_artist', $atr, 'Position was not added');
-
-        //check title of added position
-        $I->click('.item__info__expand-icon');
-        $I->loader();
+        //add grey mark
         $x=$i-1;
-        $seniority='(//*[@class="item__info__seniority"])[' . $x . ']';
-        $positionValue=$I->grabTextFrom($seniority);
+        $ones='((//*[contains(@class, "item_artist")])[' . $x . ']//*[contains(@class, "row__cell")])[7]';
+        $I->click($ones);
+        $I->click(Locator::contains('button', 'Confirm'));
+        $I->wait(10);
 
-        $department=$I->grabTextFrom('(//*[@class="item__info__department-name"])[1]');
-        $seniorityValue='Artist (' . $department . ')';
+        //Move ones
+        $I->click($ones);
+        $I->click(Locator::contains('button', 'Move Ones'));
+        $I->click('//*[contains(@class, "inputStep__icon_left")]');
+        $I->click(Locator::contains('button', 'Confirm'));
 
-        //assert correct position was added
-        $I->assertEquals($seniorityValue, $positionValue, 'Incorrect position was added');
+        //assert ones is not marked
+        $item = '((//*[contains(@class, "item_artist")])[' . $x . ']//*[contains(@class, "row__cell")])[7]/*[contains(@class, "W")]';
+        $I->dontSeeElement($item);
+
+        //assert previous ones is marked
+        $item = '((//*[contains(@class, "item_artist")])[' . $x . ']//*[contains(@class, "row__cell")])[6]/*[contains(@class, "W")]';
+        $I->seeElement($item);
     }
 }

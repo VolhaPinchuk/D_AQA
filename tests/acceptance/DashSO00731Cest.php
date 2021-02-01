@@ -75,7 +75,7 @@ class DashSO00731Cest extends BaseActions
 		//check message
 		$I->waitForElementVisible('.toast-message', 20);
 		$popup=$I->grabTextFrom('.toast-message');
-		
+
 		$I->assertEquals($popup, 'Save operation completed', 'Text of pop-up is incorrect');
 		$I->wait(2);
 		

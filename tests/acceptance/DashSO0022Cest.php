@@ -22,24 +22,26 @@ class DashSO0022Cest extends BaseActions
         //login as show
         $I->login('show', 'show');
 
+        //open Show Ones page
+        $I->showOnesPage();
+        $I->loader();
+
         //open Ones tab
-        $I->waitForElementVisible(Locator::contains('span', 'Show Ones'), 20);
-        $I->wait(1);
-        $I->click(Locator::contains('span', 'Show Ones'));
-        $I->waitForElementVisible('.request-progress-bar__wrapper.wave-loader', 20);
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
-        $I->click('//*[@class="VTab__header"]//*[contains(text(),"Ones")]');
-        $I->waitForElementVisible('.request-progress-bar__wrapper.wave-loader', 20);
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $I->onesTab();
+        $I->loader();
+
+        //select show
+        $show = $I->selectShow();
+        $I->loader();
 
         //select calendar period
         $I->waitForElementVisible('.form-control.reportrange-text', 20);
         $I->click('.form-control.reportrange-text');
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $I->loader();
         $I->waitForElementVisible('.calendars-container');
         $I->click('//*[contains(@class, "left")]//tr[3]/td[1]');
         $I->click('//*[contains(@class, "right")]//tr[6]/td[7]');
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $I->loader();
 
         //grab dates info
         $startDate=$I->grabTextFrom('//*[contains(@class, "left")]//tr[3]/td[1]');
@@ -77,10 +79,10 @@ class DashSO0022Cest extends BaseActions
         $ButtonLocator1 = '(//*[@class="header__month-row"]//*[contains(@class, "header__month__icon_days")])[' . $elementsMonthNumber . ']';
         $I->click($ButtonLocator1);
         $I->wait(15);
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $I->loader();
         $ButtonLocator2 = '((//*[@class="header__month-row"])[' . $elementsMonthNumber . ']//*[@class="header__month__icon"])[2]';
         $I->click($ButtonLocator2);
-        $I->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 20);
+        $I->loader();
 
         $elementsDate = $this->helper->findElements('(//*[contains(@class, "background_day")])[1]//*[@class="header__dayView"]');
         $elementsDateNumber = count($elementsDate);
