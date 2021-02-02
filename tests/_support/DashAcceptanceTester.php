@@ -7,7 +7,7 @@ use Helper\Acceptance;
 
 class DashAcceptanceTester extends AcceptanceTester
 {
-    protected $showForTests = 'SAS1';
+    protected $showForTests = 'A-LIB';
     protected $scenarioForTests = 'MASTER';
 
     public function login($username, $password){
@@ -42,6 +42,7 @@ class DashAcceptanceTester extends AcceptanceTester
     public function selectScenario(){
         $this->click('(//*[@class="show-ones__header-select"])[2]');
         $scenario = $this->scenarioForTests;
+        $this->click($scenario);
         return $scenario;
     }
 

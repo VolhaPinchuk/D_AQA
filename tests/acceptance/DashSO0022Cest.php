@@ -75,7 +75,6 @@ class DashSO0022Cest
 
         $ButtonLocator1 = '(//*[@class="header__month-row"]//*[contains(@class, "header__month__icon_days")])[' . $elementsMonthNumber . ']';
         $I->click($ButtonLocator1);
-        $I->wait(15);
         $I->loader();
         $ButtonLocator2 = '((//*[@class="header__month-row"])[' . $elementsMonthNumber . ']//*[@class="header__month__icon"])[2]';
         $I->click($ButtonLocator2);
