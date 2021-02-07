@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00733Cest extends BaseActions
+class DashSO00734Cest extends BaseActions
 {
     //add position lead
     public function addpositionlead(DashAcceptanceTester $I)
@@ -79,7 +79,7 @@ class DashSO00733Cest extends BaseActions
 		$I->click(Locator::contains('a', 'Save'));
 		$I->loader();
 		
-		//EDIT ONES\
+		//EDIT ONES
 		//expand 
 		$I->waitForElementVisible('.item__info__expand-icon > span:nth-child(1)', 20);
 		$I->click('.item__info__expand-icon > span:nth-child(1)');
@@ -94,7 +94,7 @@ class DashSO00733Cest extends BaseActions
             $atr=$I->grabAttributeFrom($end_pos, 'class');
         endwhile;
 		
-		//add OT
+		//Change Ones type
         for ($a = 1; $a <= $i; $a++){
             $item = '((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[4]/*[contains(@class, "W")]';
 			$item1 = '((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[4]/*[contains(@class, "W")]/*[contains(@class, "cell-inside-value")]';
@@ -103,10 +103,11 @@ class DashSO00733Cest extends BaseActions
             if ($itemIsHere !== false and $itemIsHere1 === false) {
                 $I->click('((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[4]');
                 $a = $i+1;
-				$I->waitForElementClickable('(//input[contains(@id,"VInput")])[2]');
-				$I->fillField('(//input[contains(@id,"VInput")])[2]', '1.00');
+				$I->waitForElementClickable(Locator::contains('button', 'Change Ones Type'), 20);
+				$I->click(Locator::contains('button', 'Change Ones Type'));
+				$I->waitForElementClickable('//label[contains(text(),"Potential")]', 20);
+				$I->click('//label[contains(text(),"Potential")]');
                 $I->click(Locator::contains('button', 'Confirm'));
-                $I->waitForElementNotVisible('.toast-message');
                 $I->click(Locator::contains('button', 'File'));
                 $I->click(Locator::contains('span', 'Save'));
                 $I->loader();

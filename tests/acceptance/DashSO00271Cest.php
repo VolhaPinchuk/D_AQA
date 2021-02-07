@@ -74,6 +74,7 @@ class DashSO00271Cest
         $I->click(Locator::contains('button', 'File'));
         $I->click(Locator::contains('span', 'Save'));
         $I->loader();
+        $I->waitForElementClickable('(//*[@class="show-ones__header-select"])[1]');
 
         //assert Total was not changed
         $I->assertEquals($total, $totalAfterMove, 'Total was changed');

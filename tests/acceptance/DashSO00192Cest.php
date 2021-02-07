@@ -39,11 +39,12 @@ class DashSO00192Cest
         $I->click('//*[contains(@id, "v-filter-select")]');
 
         //select one discipline
-        for ($i=2; $i<=24; $i++){
+        for ($i=16; $i<=18; $i++){
             $I->click('//*[contains(@id, "v-filter-select")]');
             $discipline = '(//*[contains(@aria-labelledby, "v-filter-select")]//label[contains(@for, "VCheckbox")])[' . $i . ']';
             $disciplineTitle = $I->grabTextFrom($discipline);
             $I->click($discipline);
+            $I->wait(5);
             $I->click('//*[contains(@id, "v-filter-select")]');
             $I->click('.Vue-apply-filter');
             $I->loader();
@@ -61,8 +62,13 @@ class DashSO00192Cest
             $I->assertEquals($disciplineTitle, $shownDisciplineTitle, 'Another discipline was shown');
 
             $I->click('//*[contains(@id, "v-filter-select")]');
+            $I->wait(5);
+            $I->seeElement('.select-all');
+            $I->wait(5);
             $I->click('.select-all');
+            $I->wait(5);
             $I->click('.select-all');
+            $I->wait(5);
             $I->click('//*[contains(@id, "v-filter-select")]');
         }
     }

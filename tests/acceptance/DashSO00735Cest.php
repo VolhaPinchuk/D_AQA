@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00733Cest extends BaseActions
+class DashSO00735Cest extends BaseActions
 {
     //add position lead
     public function addpositionlead(DashAcceptanceTester $I)
@@ -72,6 +72,18 @@ class DashSO00733Cest extends BaseActions
 		//add grey mark (ones)
 		$I->waitForElementVisible(Locator::contains('button', 'Confirm'));
 		$I->click(Locator::contains('button', 'Confirm'));
+		
+		//Move ones
+		$I->waitForElementVisible($position, 20);
+		$I->click($position);
+		$I->waitForElementClickable(Locator::contains('button', 'Move Ones'), 20);
+		$I->click(Locator::contains('button', 'Move Ones'));
+		$I->waitForElementClickable('(//input[contains(@id,"VInput")])[1]');
+		$I->fillField('(//input[contains(@id,"VInput")])[1]', '1');
+		$I->waitForElementVisible(Locator::contains('button', 'Confirm'));
+		$I->click(Locator::contains('button', 'Confirm'));
+		
+		
 		//save changes
 		$I->waitForElementVisible(Locator::contains('button', 'File'));
 		$I->click(Locator::contains('button', 'File'));
@@ -79,40 +91,6 @@ class DashSO00733Cest extends BaseActions
 		$I->click(Locator::contains('a', 'Save'));
 		$I->loader();
 		
-		//EDIT ONES\
-		//expand 
-		$I->waitForElementVisible('.item__info__expand-icon > span:nth-child(1)', 20);
-		$I->click('.item__info__expand-icon > span:nth-child(1)');
-		
-		//find number of the end position in the first department
-        $i=2;
-        $end_pos='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-        $atr=$I->grabAttributeFrom($end_pos, 'class');
-        while (strpos($atr, 'item_artist') !== false):
-            $i++;
-            $end_pos='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-            $atr=$I->grabAttributeFrom($end_pos, 'class');
-        endwhile;
-		
-		//add OT
-        for ($a = 1; $a <= $i; $a++){
-            $item = '((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[4]/*[contains(@class, "W")]';
-			$item1 = '((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[4]/*[contains(@class, "W")]/*[contains(@class, "cell-inside-value")]';
-			$itemIsHere = $I->elementIsHere($item);
-			$itemIsHere1 = $I->elementIsHere($item1);
-            if ($itemIsHere !== false and $itemIsHere1 === false) {
-                $I->click('((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[4]');
-                $a = $i+1;
-				$I->waitForElementClickable('(//input[contains(@id,"VInput")])[2]');
-				$I->fillField('(//input[contains(@id,"VInput")])[2]', '1.00');
-                $I->click(Locator::contains('button', 'Confirm'));
-                $I->waitForElementNotVisible('.toast-message');
-                $I->click(Locator::contains('button', 'File'));
-                $I->click(Locator::contains('span', 'Save'));
-                $I->loader();
-            }
-        }		
-				
 		//assert check message
 		$I->waitForElementVisible('.toast-message', 20);
 		$popup=$I->grabTextFrom('.toast-message');

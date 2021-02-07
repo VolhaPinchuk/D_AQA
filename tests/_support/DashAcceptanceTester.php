@@ -7,7 +7,7 @@ use Helper\Acceptance;
 
 class DashAcceptanceTester extends AcceptanceTester
 {
-    protected $showForTests = 'A-LIB';
+    protected $showForTests = 'B-TRN';
     protected $scenarioForTests = 'MASTER';
 
     public function login($username, $password){
@@ -17,22 +17,31 @@ class DashAcceptanceTester extends AcceptanceTester
     }
 
     public function loader(){
-        $this->waitForElementVisible('.request-progress-bar__wrapper.wave-loader', 20);
-        $this->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 40);
+        try{
+            $this->waitForElementVisible('.request-progress-bar__wrapper.wave-loader', 5);
+            $this->waitForElementNotVisible('.request-progress-bar__wrapper.wave-loader', 120);
+        }
+        catch (\Exception $exception){
+            return false;
+        }
     }
 
     public function showOnesPage(){
-        $this->waitForElementClickable(Locator::contains('span', 'Show Ones'), 20);
+        $this->waitForElementClickable(Locator::contains('span', 'Show Ones'), 60);
         $this->wait(1);
         $this->click(Locator::contains('span', 'Show Ones'));
     }
 
     public function onesTab(){
-        $this->click('//*[@class="VTab__header"]//*[contains(text(),"Ones")]');
+        $atr = $this->grabAttributeFrom('//*[@class="VTab__header"]//*[contains(text(),"Ones")]', 'class');
+        if (strpos($atr, 'active') !== true) {
+            $this->waitForElementClickable('//*[@class="VTab__header"]//*[contains(text(),"Ones")]', 60);
+            $this->click('//*[@class="VTab__header"]//*[contains(text(),"Ones")]');
+        }
     }
 
     public function selectShow(){
-        $this->waitForElementClickable('(//*[@class="show-ones__header-select"])[1]', 40);
+        $this->waitForElementClickable('(//*[@class="show-ones__header-select"])[1]', 60);
         $this->click('(//*[@class="show-ones__header-select"])[1]');
         $show = $this->showForTests;
         $this->click($show);

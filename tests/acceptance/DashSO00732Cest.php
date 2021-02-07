@@ -64,8 +64,8 @@ class DashSO00732Cest extends BaseActions
 		//notification
 		$I->waitForElementVisible($position);
 		$I->click($position);
-		$I->wait(1);
-		if ($I->elementIsHere('//*[contains(@class, "modal-dialog")]') === true){
+		$I->wait(3);
+		if ($I->elementIsHere('//*[contains(@class, "VNotification")]') === true){
 			$I->click(Locator::contains('button', 'OK'));
 			$I->waitForElementVisible($position);
 			$I->click($position);
