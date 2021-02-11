@@ -40,6 +40,12 @@ class DashAcceptanceTester extends AcceptanceTester
         }
     }
 
+    public function manageShowsPage(){
+        $this->waitForElementClickable(Locator::contains('span', 'Manage Shows'), 60);
+        $this->wait(1);
+        $this->click(Locator::contains('span', 'Manage Shows'));
+    }
+
     public function selectShow(){
         $this->waitForElementClickable('(//*[@class="show-ones__header-select"])[1]', 60);
         $this->click('(//*[@class="show-ones__header-select"])[1]');
@@ -53,6 +59,11 @@ class DashAcceptanceTester extends AcceptanceTester
         $scenario = $this->scenarioForTests;
         $this->click($scenario);
         return $scenario;
+    }
+
+    public function logout(){
+        $this->click('//*[@class="user-name"]');
+        $this->click(Locator::contains('span', 'Log out'));
     }
 
     public function assertContains($a, $b, $text){

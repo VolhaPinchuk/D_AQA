@@ -33,16 +33,6 @@ class DashSO00821Cest
         $show = $I->selectShow();
         $I->loader();
 
-        $I->click('//*[contains(@id, "v-filter-select")]');
-        $I->click('.select-all');
-        for ($i=2; $i<=6; $i++) {
-            $discipline = '(//*[contains(@aria-labelledby, "v-filter-select")]//label[contains(@for, "VCheckbox")])[' . $i . ']';
-            $I->click($discipline);
-        }
-        $I->click('//*[contains(@id, "v-filter-select")]');
-        $I->click('.Vue-apply-filter');
-        $I->loader();
-
         //find rows quantity
         $rows = $this->helper->findElements('//*[contains(@class, "item_artist")]');
         $rowsNumber = count($rows);
@@ -50,6 +40,7 @@ class DashSO00821Cest
         $columns = $this->helper->findElements('(//*[contains(@class, "item_artist")])[1]//*[contains(@class, "row__cell")]');
         $columnsNumber = count($columns);
 
+        //create arrow with statusId of each ones and without empty rows
         $m=1;
         for ($i=1; $i<=$rowsNumber; $i++){
             for ($k=1; $k<=$columnsNumber; $k++){
@@ -57,19 +48,41 @@ class DashSO00821Cest
                 $itemIsHere = $I->elementIsHere($item);
                 if ($itemIsHere === false){
                     $statusId[$m][$k] = '0';
-                    echo ($statusId[$m][$k]);
                 }
                 else {
                     $atr = $I->grabAttributeFrom($item, 'class');
                     $statusId[$m][$k] = substr($atr, 10, 1);
-                    echo ($statusId[$m][$k]);
                 }
             }
             for ($l=1; $l<=$columnsNumber; $l++){
-                echo ($statusId[$m][$l]);
                 if ($statusId[$m][$l] != '0' or $statusId[$m][$l] != '8'){
                     $m++;
                     break;
+                }
+            }
+        }
+        //count ones with each statusId in created arrow
+        $statusId1 = 0;
+        $statusId2 = 0;
+        $statusId3 = 0;
+        $statusId4 = 0;
+        $statusId0 = 0;
+        for ($i=1; $i<=$m-1; $i++){
+            for ($k=1; $k<=$columnsNumber; $k++){
+                if ($statusId[$i][$k] == '1'){
+                    $statusId1++;
+                }
+                elseif ($statusId[$i][$k] == '2'){
+                    $statusId2++;
+                }
+                elseif ($statusId[$i][$k] == '3'){
+                    $statusId3++;
+                }
+                elseif ($statusId[$i][$k] == '4'){
+                    $statusId4++;
+                }
+                else {
+                    $statusId0++;
                 }
             }
         }
@@ -118,31 +131,57 @@ class DashSO00821Cest
         //scenario was added
         $I->assertContains('AQATest', $scenario, 'Scenario was not added');
 
+        //find rows quantity
         $rows = $this->helper->findElements('//*[contains(@class, "item_artist")]');
         $newRowsNumber = count($rows);
-        $x=$m-1;
-        $I->assertEquals($newRowsNumber, $x, 'error');
+        $y=$m-1;
+        //assert new scenario has the same rows as MASTER (without blank rows)
+        $I->assertEquals($newRowsNumber, $y, 'error');
 
-        for ($x=1; $x<=5; $x++){
-            $a[$x] = rand(1, $columnsNumber);
-        }
         for ($n=1; $n<=$newRowsNumber; $n++){
-            for ($x=1; $x<=5; $x++){
+            for ($x=1; $x<=$columnsNumber; $x++){
                 $item = '((//*[contains(@class, "item_artist")])[' . $n . ']//*[contains(@class, "row__cell")])[' . $a[$x] . ']/*[contains(@class, "W")]';
                 $itemIsHere = $I->elementIsHere($item);
                 if ($itemIsHere === false){
                     $newStatusId[$n][$x] = '0';
-                    echo ($newStatusId[$n][$x]);
-                    $I->assertEquals($newStatusId[$n][$x], $statusId[$n][$x], 'Grid is not as MASTER');
                 }
                 else {
                     $atr = $I->grabAttributeFrom($item, 'class');
                     $newStatusId[$n][$x] = substr($atr, 10, 1);
-                    echo ($newStatusId[$n][$x]);
-                    $I->assertEquals($newStatusId[$n][$x], $statusId[$n][$x], 'Grid is not as MASTER');
                 }
             }
         }
+        //count ones with each statusId in created arrow
+        $newStatusId1 = 0;
+        $newStatusId2 = 0;
+        $newStatusId3 = 0;
+        $newStatusId4 = 0;
+        $newStatusId0 = 0;
+        for ($i=1; $i<=$newRowsNumber; $i++){
+            for ($k=1; $k<=$columnsNumber; $k++){
+                if ($statusId[$i][$k] == '1'){
+                    $newStatusId1++;
+                }
+                elseif ($statusId[$i][$k] == '2'){
+                    $newStatusId2++;
+                }
+                elseif ($statusId[$i][$k] == '3'){
+                    $newStatusId3++;
+                }
+                elseif ($statusId[$i][$k] == '4'){
+                    $newStatusId4++;
+                }
+                else {
+                    $newStatusId0++;
+                }
+            }
+        }
+        //asserts count ones for each statusId in new scenario is as count ones for each StatusId in MASTER
+        $I->assertEquals($statusId1, $newStatusId1, 'New scenario is not as MASTER');
+        $I->assertEquals($statusId2, $newStatusId2, 'New scenario is not as MASTER');
+        $I->assertEquals($statusId3, $newStatusId3, 'New scenario is not as MASTER');
+        $I->assertEquals($statusId4, $newStatusId4, 'New scenario is not as MASTER');
+        $I->assertEquals($statusId0, $newStatusId0, 'New scenario is not as MASTER');
 
         //delete scenario
         $I->waitForElementClickable(Locator::contains('button', 'File'), 20);
