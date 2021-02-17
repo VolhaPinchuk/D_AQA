@@ -5,11 +5,6 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-/*
-The test only works in the maximum window on a 24" monitor.
-It has problem with scroll in discipline dropdown.
-*/
-
 class DashSO00192Cest
 {
     protected $helper = null;
