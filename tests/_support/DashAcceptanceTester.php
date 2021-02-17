@@ -7,8 +7,12 @@ use Helper\Acceptance;
 
 class DashAcceptanceTester extends AcceptanceTester
 {
-    protected $showForTests = 'B-TRN';
+    protected $showForTests = 'AQA-TEST';
     protected $scenarioForTests = 'MASTER';
+    /**
+     * @var Acceptance
+     */
+    protected $helper = null;
 
     public function login($username, $password){
         $this->fillField('#UserName',$username);
@@ -66,6 +70,98 @@ class DashAcceptanceTester extends AcceptanceTester
         $this->click(Locator::contains('span', 'Log out'));
     }
 
+    public function dlDeptOnesPage(){
+        $this->waitForElementClickable('//*[text()="DL Dept. Ones"]', 60);
+        $this->wait(1);
+        $this->click('//*[text()="DL Dept. Ones"]');
+    }
+
+    public function addpositionpopup(){
+        $this->click('.item__info__department-add-icon');
+        $this->waitForElementVisible('#AddPositionPopup', 20);
+    }
+
+    public function addoneposition($a, $b){
+        $this->click('(//*[@id="AddPositionPopup"]//*[contains(@class,"ui-checkbox")])[' . $a . ']');
+        $this->waitForElementVisible('(//input[contains(@id,"VInput")])[' . $b . ']');
+        $this->fillField('(//input[contains(@id,"VInput")])[' . $b . ']', '1');
+    }
+
+    public function confirmaddposition(){
+        $this->click('//*[@id="AddPositionPopup"]//button[contains(text(), "Add")]');
+    }
+
+    public function numberofendposition(){
+        $i = 2;
+        $position = '//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
+        $atr = $this->grabAttributeFrom($position, 'class');
+        while (strpos($atr, 'item_artist') !== false):
+            $i++;
+            $position = '//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
+            $atr = $this->grabAttributeFrom($position, 'class');
+        endwhile;
+        return array ($i, $position);
+    }
+
+    public function columnsnumber(Acceptance $acceptanceHelper){
+        $this->helper = $acceptanceHelper;
+        $column = '(//*[contains(@class, "item_artist")])[1]//*[contains(@class, "row__cell")]';
+        $columns = $this->helper->findElements($column);
+        $columnsNumber = count($columns);
+        return $columnsNumber;
+    }
+
+    public function addrandomgreymark($i, $columnsNumber){
+        $x = $i - 1;
+        $addOnesPopup = null;
+        while ($addOnesPopup !== false):
+            $a = rand(1, $x);
+            $b = rand(9, $columnsNumber);
+            $ones = '((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[' . $b . ']';
+            $this->waitForElementVisible($ones);
+            $this->click($ones);
+            $this->waitForElementVisible('//*[@id="BookPopup"]');
+            $this->click('//*[@id="BookPopup"]//button[contains(text(), "Confirm")]');
+            $addOnesPopup = $this->elementIsHere('//*[contains(@class, "toast-message")]');
+        endwhile;
+        return array ($a, $b);
+    }
+
+    public function save(){
+        $this->waitForElementClickable(Locator::contains('button', 'File'), 20);
+        $this->click(Locator::contains('button', 'File'));
+        $this->waitForElementClickable(Locator::contains('span', 'Save'), 20);
+        $this->click(Locator::contains('span', 'Save'));
+        $this->loader();
+    }
+
+    public function showonespublish(){
+        $this->waitForElementClickable(Locator::contains('button', 'File'), 20);
+        $this->click(Locator::contains('button', 'File'));
+        $this->waitForElementClickable(Locator::contains('a', 'Publish'), 20);
+        $this->click(Locator::contains('a', 'Publish'));
+        $this->click('((//*[contains(@class, "publishPopup__body__tabs-group")])[1]//*[contains(@class, "ui-checkbox_default")])[1]');
+        $this->click('((//*[contains(@class, "publishPopup__body__tabs-group")])[2]//*[contains(@class, "ui-checkbox_default")])[1]');
+        $this->click('//*[@class="publishPopup"]//button[contains(text(), "Send")]');
+    }
+
+    public function deptpublish(){
+        $this->waitForElementClickable(Locator::contains('button', 'File'));
+        $this->click(Locator::contains('button', 'File'));
+        $this->waitForElementClickable(Locator::contains('a', 'Publish'));
+        $this->click(Locator::contains('a', 'Publish'));
+    }
+
+    public function selectcalendarperiod(){
+        $this->waitForElementVisible('.form-control.reportrange-text', 20);
+        $this->click('.form-control.reportrange-text');
+        $this->waitForElementVisible('.calendars-container', 20);
+        $this->click('//*[contains(@class, "left")]//*[contains(@class, "next")]');
+        $this->click('//*[contains(@class, "left")]//*[contains(@class, "next")]');
+        $this->click('//*[contains(@class, "left")]//tr[3]/td[1]');
+        $this->click('//*[contains(@class, "right")]//tr[6]/td[7]');
+    }
+
     public function assertContains($a, $b, $text){
         if(strpos($b,$a)===false){
             $this->fail($text);
@@ -80,6 +176,18 @@ class DashAcceptanceTester extends AcceptanceTester
 
     public function assertNotEquals($a, $b, $text){
         if ($a == $b) {
+            $this->fail($text);
+        }
+    }
+
+    public function assertGreaterOrEquals($a, $b, $text){
+        if($a < $b){
+            $this->fail($text);
+        }
+    }
+
+    public function assertGreaterThan($a, $b, $text){
+        if($a <= $b){
             $this->fail($text);
         }
     }
