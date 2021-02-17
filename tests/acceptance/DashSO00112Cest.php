@@ -27,25 +27,15 @@ class DashSO00112Cest
         $I->loader();
 
         //find number of the end position in the first department
-        $i=2;
-        $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-        $atr=$I->grabAttributeFrom($position, 'class');
-        while (strpos($atr, 'item_artist') !== false):
-            $i++;
-            $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-            $atr=$I->grabAttributeFrom($position, 'class');
-        endwhile;
+        list ($i, $position) = $I->numberofendposition();
 
         //open Add position popup
-        $I->click('.item__info__department-add-icon');
-        $I->waitForElementVisible('#AddPositionPopup', 20);
+        $I->addpositionpopup();
 
         //add position Key artist
-        $I->click('(//*[@id="AddPositionPopup"]//*[contains(@class,"ui-checkbox")])[2]');
-        $I->waitForElementVisible('(//input[contains(@id,"VInput")])[1]');
-        $I->fillField('(//input[contains(@id,"VInput")])[1]', '1');
+        $I->addoneposition(2, 1);
 
-        $I->click('//*[@id="AddPositionPopup"]//button[contains(text(), "Add")]');
+        $I->confirmaddposition();
         $I->click('.item__info__expand-icon');
 
         //find added position

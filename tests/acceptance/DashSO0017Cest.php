@@ -28,7 +28,7 @@ class DashSO0017Cest
 
         //select scenario
         $scenario = $I->selectScenario();
-//        $I->loader(); //need if scenario is not MASTER
+        $I->loader();
 
         $scenarioName = $I->grabTextFrom('(//*[@class="show-ones__header-select"])[2]');
 

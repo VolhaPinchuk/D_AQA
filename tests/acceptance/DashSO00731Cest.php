@@ -7,13 +7,20 @@ use Helper\Acceptance;
 
 class DashSO00731Cest extends BaseActions
 {
-    //add position lead
-    public function addpositionlead(DashAcceptanceTester $I)
+    protected $helper = null;
+
+    public function _before(DashAcceptanceTester $I, Acceptance $acceptanceHelper)
+    {
+        $this->helper = $acceptanceHelper;
+    }
+
+    //save page after add Ones
+    public function savepageafteraddones(DashAcceptanceTester $I)
     {
 		//variables
 		$sort_d='.item__info__department-sorting > span:nth-child(2)';
 		$sort_up='.item__info__department-sorting > span:nth-child(1)';
-		$position='((//*[contains(@class, "item_artist")])[1]//*[contains(@class, "row__cell")])[4]';
+		$position_locator='((//*[contains(@class, "item_artist")])[1]//*[contains(@class, "row__cell")])[4]';
 		$exp_spinner='.btn__loading';
 		$last_save='.header__history__info:nth-child(2)';
 		
@@ -29,29 +36,20 @@ class DashSO00731Cest extends BaseActions
 		$I->showOnesPage();
 		$I->loader();
         $I->onesTab();
-		$I->loader();
-		
+
+        //select show
+        $I->selectShow();
+        $I->loader();
+
 		//grab time of last save (can be empty!!)
 		$I->waitForElementVisible($last_save, 20);
 		$time1=$I->grabTextFrom($last_save);
 		$time1=substr($time1, 0, strpos($time1, ' ', 30));
 		
-		//select show
-		$I->selectShow();
-		$I->loader();
-		
-		//add position
-		$I->waitForElementClickable('.item__info__department-add-icon', 20); 
-		$I->click('.item__info__department-add-icon');
-		//lead choise
-		$I->waitForElementVisible(Locator::contains('label', 'Lead'));
-		$I->click(Locator::contains('label', 'Lead'));
-		//quantity of leads
-		$I->waitForElementVisible('(//input[contains(@type,"text")])[1]', '1');
-		$I->fillField('(//input[contains(@type,"text")])[1]', '1');
-		//click on add button
-		$I->waitForElementClickable(Locator::contains('button', 'Add'));
-		$I->click(Locator::contains('button', 'Add'));
+        //open Add position popup and add position Lead
+        $I->addpositionpopup();
+        $I->addoneposition(1, 1);
+        $I->confirmaddposition();
 		//sorting
 		$I->waitForElementClickable($sort_up, 20);
 		$I->doubleclick($sort_up);
@@ -59,14 +57,14 @@ class DashSO00731Cest extends BaseActions
 		$I->click($sort_d);
 		
 		//notification
-		$I->waitForElementVisible($position);
-		$I->click($position);
+		$I->waitForElementVisible($position_locator);
+		$I->click($position_locator);
 		$I->wait(3);
 		if ($I->elementIsHere('//*[contains(@class, "VNotification")]') === true)
 		{
 			$I->click(Locator::contains('button', 'OK'));
-			$I->waitForElementVisible($position);
-			$I->click($position);
+			$I->waitForElementVisible($position_locator);
+			$I->click($position_locator);
 		}
 		
 		//add ones
@@ -74,11 +72,7 @@ class DashSO00731Cest extends BaseActions
 		$I->click(Locator::contains('button', 'Confirm'));
 		
 		//save changes
-		$I->waitForElementVisible(Locator::contains('button', 'File'));
-		$I->click(Locator::contains('button', 'File'));
-		$I->waitForElementVisible(Locator::contains('a', 'Save'));
-		$I->click(Locator::contains('a', 'Save'));
-		$I->loader();
+		$I->save();
 		
 		//assert check message
 		$I->waitForElementVisible('.toast-message', 20);

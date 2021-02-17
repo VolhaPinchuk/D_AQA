@@ -7,8 +7,15 @@ use Helper\Acceptance;
 
 class DashSO0026Cest
 {
+    protected $helper = null;
+
+    public function _before(DashAcceptanceTester $I, Acceptance $acceptanceHelper)
+    {
+        $this->helper = $acceptanceHelper;
+    }
+
     //Remove Ones from the grid
-    public function removeones(DashAcceptanceTester $I)
+    public function removeones(DashAcceptanceTester $I, Acceptance $acceptanceHelper)
     {
         $I->amOnPage('/');
 
@@ -29,44 +36,27 @@ class DashSO0026Cest
         $total = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
 
         //find number of the end position in the first department
-        $i=2;
-        $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-        $atr=$I->grabAttributeFrom($position, 'class');
-        while (strpos($atr, 'item_artist') !== false):
-            $i++;
-            $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-            $atr=$I->grabAttributeFrom($position, 'class');
-        endwhile;
+        list ($i, $position) = $I->numberofendposition();
 
-        //open Add position popup
-        $I->click('.item__info__department-add-icon');
-        $I->waitForElementVisible('#AddPositionPopup', 20);
+        //open Add position popup and add position Lead
+        $I->addpositionpopup();
+        $I->addoneposition(1, 1);
+        $I->confirmaddposition();
 
-        //add position Lead
-        $I->click('(//*[@id="AddPositionPopup"]//*[contains(@class,"ui-checkbox")])[1]');
-        $I->waitForElementVisible('(//input[contains(@id,"VInput")])[1]');
-        $I->fillField('(//input[contains(@id,"VInput")])[1]', '1');
+        //find columns number
+        $columnsNumber = $I->columnsnumber($acceptanceHelper);
 
-        $I->click('//*[@id="AddPositionPopup"]//button[contains(text(), "Add")]');
-
-        //add grey mark
-        $x=$i-1;
-        $line='((//*[contains(@class, "item_artist")])[' . $x . ']//*[contains(@class, "row__cell")])[7]';
-        $I->waitForElementVisible($line);
-        $I->click($line);
-        $I->waitForElementClickable(Locator::contains('button', 'Confirm'));
-        $I->click('//*[@class="modal-dialog"]//button[contains(text(), "Confirm")]');
-        $I->click(Locator::contains('button', 'File'));
-        $I->click(Locator::contains('span', 'Save'));
-        $I->loader();
+        //add random grey mark
+        list ($a, $b) = $I->addrandomgreymark($i, $columnsNumber);
+        $I->save();
 
         //remove mark
-        for ($a = 1; $a <= $x; $a++){
-            $item = '((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[7]/*[contains(@class, "W")]';
+        for ($k = 1; $k <= $i-1; $k++){
+            $item = '((//*[contains(@class, "item_artist")])[' . $k . ']//*[contains(@class, "row__cell")])[' . $b . ']/*[contains(@class, "W")]';
             $itemIsHere = $I->elementIsHere($item);
             if ($itemIsHere !== false) {
-                $I->click('((//*[contains(@class, "item_artist")])[' . $a . ']//*[contains(@class, "row__cell")])[7]');
-                $a = $x+1;
+                $I->click('((//*[contains(@class, "item_artist")])[' . $k . ']//*[contains(@class, "row__cell")])[' . $b . ']');
+                $k = $i;
                 $I->waitForElementVisible(Locator::contains('button', 'Remove Ones'));
                 $I->click(Locator::contains('button', 'Remove Ones'));
                 $I->click(Locator::contains('button', 'Confirm'));

@@ -16,13 +16,13 @@ class DashSO00683Cest extends BaseActions
         $this->helper = $acceptanceHelper;
     }
 	
-    //add position lead
-    public function addpositionlead(DashAcceptanceTester $I)
+    //Publish page after move Ones
+    public function publishpageaftermoveones(DashAcceptanceTester $I)
     {
 		//variables
 		$sort_d='.item__info__department-sorting > span:nth-child(2)';
 		$sort_up='.item__info__department-sorting > span:nth-child(1)';
-		$position='((//*[contains(@class, "item_artist")])[1]//*[contains(@class, "row__cell")])[4]';
+		$position_locator ='((//*[contains(@class, "item_artist")])[1]//*[contains(@class, "row__cell")])[4]';
 		
         $I->amOnPage('/');
 
@@ -35,37 +35,24 @@ class DashSO00683Cest extends BaseActions
 		
 		//open Ones tab
         $I->onesTab();
-		$I->loader();
-		
+
 		//select show
 		$I->selectShow();
 		$I->loader();
 
 		//select calendar period
-        $I->waitForElementVisible('.form-control.reportrange-text', 20);
-        $I->click('.form-control.reportrange-text');
-        $I->waitForElementVisible('.calendars-container', 20);		
-		$I->click('//*[contains(@class, "left")]//*[contains(@class, "next")]');
-		$I->click('//*[contains(@class, "left")]//*[contains(@class, "next")]');
-		$I->click('//*[contains(@class, "left")]//tr[3]/td[1]');
-		$I->click('//*[contains(@class, "right")]//tr[6]/td[7]');
+        $I->selectcalendarperiod();
 		$I->waitForElementClickable(Locator::contains('button', 'Confirm'), 20);
 		$I->click(Locator::contains('button', 'Confirm'));
         $I->click(Locator::contains('button', 'Apply'));
         $I->loader();
-		
-		//add position lead
-		$I->waitForElementClickable('.item__info__department-add-icon', 20); 
-		$I->click('.item__info__department-add-icon');
-		//lead choise
-		$I->waitForElementVisible(Locator::contains('label', 'Lead'));
-		$I->click(Locator::contains('label', 'Lead'));
-		//quantity of leads
-		$I->waitForElementVisible('(//input[contains(@type,"text")])[1]', '1');
-		$I->fillField('(//input[contains(@type,"text")])[1]', '1');
-		//click on add button
-		$I->waitForElementClickable(Locator::contains('button', 'Add'));
-		$I->click(Locator::contains('button', 'Add'));
+
+        //open Add position popup
+        $I->addpositionpopup();
+
+        //add position Lead
+        $I->addoneposition(1, 1);
+        $I->confirmaddposition();
 		//sorting
 		$I->waitForElementClickable($sort_up, 20);
 		$I->doubleclick($sort_up);
@@ -73,35 +60,24 @@ class DashSO00683Cest extends BaseActions
 		$I->click($sort_d);
 		
 		//notification
-		$I->waitForElementVisible($position);
-		$I->click($position);
+		$I->waitForElementVisible($position_locator);
+		$I->click($position_locator);
 		$I->wait(3);
 		if ($I->elementIsHere('//*[contains(@class, "VNotification")]') === true){
 			$I->click(Locator::contains('button', 'OK'));
-			$I->waitForElementVisible($position);
-			$I->click($position);
+			$I->waitForElementVisible($position_locator);
+			$I->click($position_locator);
 		}
 		
 		//add grey mark (ones)
 		$I->waitForElementVisible(Locator::contains('button', 'Confirm'));
 		$I->click(Locator::contains('button', 'Confirm'));
 		//save changes
-		$I->waitForElementVisible(Locator::contains('button', 'File'));
-		$I->click(Locator::contains('button', 'File'));
-		$I->waitForElementVisible(Locator::contains('a', 'Save'));
-		$I->click(Locator::contains('a', 'Save'));
-		$I->loader();
+		$I->save();
 		$I->waitForElementNotVisible('.toast-message', 20);
 		
 		//publish
-		$I->waitForElementVisible(Locator::contains('button', 'File'), 20);
-		$I->click(Locator::contains('button', 'File'));
-		$I->waitForElementVisible(Locator::contains('a', 'Publish'), 20);
-		$I->click(Locator::contains('a', 'Publish'));
-		$I->waitForElementVisible('(//label[contains(text(),"Select all")])[1]', 20);
-		$I->click('(//label[contains(text(),"Select all")])[1]');
-		$I->click('(//label[contains(text(),"Select all")])[2]');
-		$I->click(Locator::contains('button', 'Send'));
+		$I->showonespublish();
 		$I->loader();
 		$I->loader();
 		
@@ -117,14 +93,7 @@ class DashSO00683Cest extends BaseActions
 		$I->click('.item__info__expand-icon > span:nth-child(1)');
 		
 		//find number of the end position in the first department
-        $i=2;
-        $end_pos='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-        $atr=$I->grabAttributeFrom($end_pos, 'class');
-        while (strpos($atr, 'item_artist') !== false):
-            $i++;
-            $end_pos='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-            $atr=$I->grabAttributeFrom($end_pos, 'class');
-        endwhile;
+        list ($i, $position) = $I->numberofendposition();
 		$i=$i-2;
 		echo('count in column: ' . $i . "\n");
 		
@@ -143,9 +112,7 @@ class DashSO00683Cest extends BaseActions
 				$I->fillField('(//input[contains(@id,"VInput")])[1]', '1');
 				$I->waitForElementVisible(Locator::contains('button', 'Confirm'));
                 $I->click(Locator::contains('button', 'Confirm'));
-                $I->click(Locator::contains('button', 'File'));
-                $I->click(Locator::contains('span', 'Save'));
-                $I->loader();
+                $I->save();
 				$I->waitForElementNotVisible('.toast-message', 20);
             }
         }	
@@ -199,14 +166,7 @@ class DashSO00683Cest extends BaseActions
 		echo('Tabby: ' . $tabby_it . "\n");
 		
 		//publish
-		$I->waitForElementVisible(Locator::contains('button', 'File'), 20);
-		$I->click(Locator::contains('button', 'File'));
-		$I->waitForElementVisible(Locator::contains('a', 'Publish'), 20);
-		$I->click(Locator::contains('a', 'Publish'));
-		$I->waitForElementVisible('(//label[contains(text(),"Select all")])[1]', 20);
-		$I->click('(//label[contains(text(),"Select all")])[1]');
-		$I->click('(//label[contains(text(),"Select all")])[2]');
-		$I->click(Locator::contains('button', 'Send'));
+		$I->showonespublish();
 		$I->loader();
 		$I->loader();
 		
@@ -218,7 +178,7 @@ class DashSO00683Cest extends BaseActions
 		}		
 		
 		//check Ones color after publish
-		$I->waitForElementClickable($position, 20);
+		$I->waitForElementClickable($position_locator, 20);
 		$color_it_1 = $gray_it_1 = $orange_it_1 = $green_it_1 = $red_it_1 = $tabby_it_1 = 0;
 		
         for ($a = 1; $a <= $elementsPositionNumber; $a++){

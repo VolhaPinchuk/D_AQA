@@ -26,27 +26,15 @@ class DashSO0047Cest
         $show = $I->selectShow();
         $I->loader();
 
-        //find number of the end position in the first discipline
-        $i=2;
-        $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-        $atr=$I->grabAttributeFrom($position, 'class');
-        while (strpos($atr, 'item_artist') !== false):
-            $i++;
-            $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-            $atr=$I->grabAttributeFrom($position, 'class');
-        endwhile;
+        //find number of the end position in the first department
+        list ($i, $position) = $I->numberofendposition();
 
         $endArtistNumber = $i-1;
 
-        //open Add position popup
-        $I->click('.item__info__department-add-icon');
-        $I->waitForElementVisible('#AddPositionPopup', 20);
-
-        //add position Lead
-        $I->click('(//*[@id="AddPositionPopup"]//*[contains(@class,"ui-checkbox")])[1]');
-        $I->waitForElementVisible('(//input[contains(@id,"VInput")])[1]');
-        $I->fillField('(//input[contains(@id,"VInput")])[1]', '1');
-        $I->click('//*[@id="AddPositionPopup"]//button[contains(text(), "Add")]');
+        //open Add position popup and add position Lead
+        $I->addpositionpopup();
+        $I->addoneposition(1);
+        $I->confirmaddposition();
 
         //delete added position
         $x=$i-1;
@@ -57,14 +45,7 @@ class DashSO0047Cest
         $I->loader();
 
         //find number of the end position in the first discipline
-        $i=2;
-        $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-        $atr=$I->grabAttributeFrom($position, 'class');
-        while (strpos($atr, 'item_artist') !== false):
-            $i++;
-            $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-            $atr=$I->grabAttributeFrom($position, 'class');
-        endwhile;
+        list ($i, $position) = $I->numberofendposition();
 
         $endArtistNumberAfterDeleting = $i-1;
 

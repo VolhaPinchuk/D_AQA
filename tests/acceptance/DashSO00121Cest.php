@@ -7,6 +7,13 @@ use Helper\Acceptance;
 
 class DashSO00121Cest
 {
+    protected $helper = null;
+
+    public function _before(DashAcceptanceTester $I, Acceptance $acceptanceHelper)
+    {
+        $this->helper = $acceptanceHelper;
+    }
+
     //mark ones for Lead as grey
     public function markonesgreylead(DashAcceptanceTester $I)
     {
@@ -27,43 +34,32 @@ class DashSO00121Cest
         $I->loader();
 
         $total = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
-        $i = 0;
-        $b = null;
-        $a = null;
-        while ($a != '/'):
-            $a = $total[$i];
-            $b = $b . $a;
-            $i++;
+        $k = 0;
+        $l = null;
+        $m = null;
+        while ($m != '/'):
+            $m = $total[$k];
+            $l = $l . $m;
+            $k++;
         endwhile;
-        $b = intval($b);
-        $d1 = substr($total, $i);
+        $l = intval($l);
+        $n1 = substr($total, $k);
 
         //find number of the end position in the first department
-        $i=2;
-        $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-        $atr=$I->grabAttributeFrom($position, 'class');
-        while (strpos($atr, 'item_artist') !== false):
-            $i++;
-            $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-            $atr=$I->grabAttributeFrom($position, 'class');
-        endwhile;
+        list ($i, $position) = $I->numberofendposition();
 
         //open Add position popup
-        $I->click('.item__info__department-add-icon');
-        $I->waitForElementVisible('#AddPositionPopup', 20);
+        $I->addpositionpopup();
 
         //add position Lead
-        $I->click('(//*[@id="AddPositionPopup"]//*[contains(@class,"ui-checkbox")])[1]');
-        $I->waitForElementVisible('(//input[contains(@id,"VInput")])[1]');
-        $I->fillField('(//input[contains(@id,"VInput")])[1]', '1');
+        $I->addoneposition(1, 1);
+        $I->confirmaddposition();
 
-        $I->click('//*[@id="AddPositionPopup"]//button[contains(text(), "Add")]');
+        //find columns number
+        $columnsNumber = $I->columnsnumber($acceptanceHelper);
 
-        //add grey mark
-        $x=$i-1;
-        $line='((//*[contains(@class, "item_artist")])[' . $x . ']//*[contains(@class, "row__cell")])[7]';
-        $I->click($line);
-        $I->click('//*[@class="modal-dialog"]//button[contains(text(), "Confirm")]');
+        //add random grey mark
+        list ($a, $b) = $I->addrandomgreymark($i, $columnsNumber);
 
         $totalAfterAddMark = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
 
@@ -71,26 +67,24 @@ class DashSO00121Cest
         $I->assertEquals($total, $totalAfterAddMark, 'Total changed after add mark');
 
         //save mark
-        $I->click(Locator::contains('button', 'File'));
-        $I->click(Locator::contains('span', 'Save'));
-        $I->loader();
+        $I->save();
 
         //check mark was saved
         $totalAfterSave = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
-        $i = 0;
-        $c = null;
-        $a = null;
-        while ($a != '/'):
-            $a = $totalAfterSave[$i];
-            $c = $c . $a;
-            $i++;
+        $k = 0;
+        $p = null;
+        $m = null;
+        while ($m != '/'):
+            $m = $totalAfterSave[$k];
+            $p = $p . $m;
+            $k++;
         endwhile;
-        $c = intval($c)-1;
-        $d2 = substr($totalAfterSave, $i);
+        $p = intval($p)-1;
+        $n2 = substr($totalAfterSave, $k);
 
         //assert total changed and the difference is equal 1
         $I->assertNotEquals($total, $totalAfterSave, 'Total was not changed');
-        $I->assertEquals($b, $c, 'The difference is not equal 1');
-        $I->assertEquals($d1, $d2, 'Other part of total was not changed');
+        $I->assertEquals($l, $p, 'The difference is not equal 1');
+        $I->assertEquals($n1, $n2, 'Other part of total was not changed');
     }
 }

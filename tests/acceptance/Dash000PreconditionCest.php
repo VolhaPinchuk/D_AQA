@@ -5,16 +5,20 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class Dash000PreconditionCest
+class Dash000PreconditionCest extends Locators
 {
-    public function _before(DashAcceptanceTester $I)
+    protected $helper = null;
+
+    public function _before(DashAcceptanceTester $I, Acceptance $acceptanceHelper)
     {
+        $this->helper = $acceptanceHelper;
     }
 
     //Precondition
     public function precondition(DashAcceptanceTester $I)
     {
         $I->amOnPage('/');
+        $I->maximizeWindow();
 
         //login as show
         $I->login('show', 'show');
@@ -29,10 +33,9 @@ class Dash000PreconditionCest
         //show code
         $I->wait(1);
         $I->fillField('//input[contains(@class, "show-code")]', 'AQA-Test');
-        $I->scrollTo('//*[contains(text(), "Create Show")]');
-        $I->wait(5);
+        $elements = $this->helper->findElements('//*[contains(text(), "Create Show")]');
+        $I->executeJS("arguments[0].scrollIntoView(true);", $elements);
         $I->click('//*[contains(text(), "Create Show")]');
-        $I->wait(5);
         $showCodeError = $I->grabAttributeFrom('//*[@id="showCode-error"]', 'style');
         if ($showCodeError === 'display: none') {
             //show type
@@ -99,8 +102,11 @@ class Dash000PreconditionCest
             $I->click('//button[contains(text(), "Create Show")]');
             $I->wait(5);
             $I->loader();
-            $date = new DateTime();
-
+            $I->logout();
+        }
+        else {
+            $I->waitForElementNotVisible('//*[contains(text(), "Form is invalid")]');
+            $I->logout();
         }
     }
 }

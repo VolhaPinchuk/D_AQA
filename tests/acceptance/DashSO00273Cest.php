@@ -29,24 +29,14 @@ class DashSO00273Cest
         $total = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');
 
         //find number of the end position in the first department
-        $i=2;
-        $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-        $atr=$I->grabAttributeFrom($position, 'class');
-        while (strpos($atr, 'item_artist') !== false):
-            $i++;
-            $position='//*[@id="app"]//div[2]/div[2]/div[2]/div/div[2]/div[2]/div/div[' . $i . ']';
-            $atr=$I->grabAttributeFrom($position, 'class');
-        endwhile;
+        list ($i, $position) = $I->numberofendposition();
 
         //open Add position popup
-        $I->click('.item__info__department-add-icon');
-        $I->waitForElementVisible('#AddPositionPopup', 20);
+        $I->addpositionpopup();
 
         //add position Lead
-        $I->click('(//*[@id="AddPositionPopup"]//*[contains(@class,"ui-checkbox")])[1]');
-        $I->waitForElementVisible('(//input[contains(@id,"VInput")])[1]');
-        $I->fillField('(//input[contains(@id,"VInput")])[1]', '1');
-        $I->click('//*[@id="AddPositionPopup"]//button[contains(text(), "Add")]');
+        $I->addoneposition(1, 1);
+        $I->confirmaddposition();
 
         //add grey mark
         $x=$i-1;
@@ -71,9 +61,8 @@ class DashSO00273Cest
         $item = '((//*[contains(@class, "item_artist")])[' . $x . ']//*[contains(@class, "row__cell")])[6]/*[contains(@class, "W")]';
         $I->seeElement($item);
 
-        $I->click(Locator::contains('button', 'File'));
-        $I->click(Locator::contains('span', 'Save'));
-        $I->loader();
+        $I->save();
+        $I->waitForElementClickable('(//*[@class="show-ones__header-select"])[1]');
 
         //assert Total was not changed
         $I->assertEquals($total, $totalAfterMove, 'Total was changed');
