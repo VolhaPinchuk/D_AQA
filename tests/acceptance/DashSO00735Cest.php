@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00735Cest extends BaseActions
+class DashSO00735Cest
 {
     protected $helper = null;
 
@@ -74,6 +74,7 @@ class DashSO00735Cest extends BaseActions
 		
 		//save changes
 		$I->save();
+        $I->loader();
 		
 		//find number of the end position in the first department
         list ($i, $position) = $I->numberofendposition();
@@ -96,6 +97,7 @@ class DashSO00735Cest extends BaseActions
 				$I->waitForElementVisible(Locator::contains('button', 'Confirm'));
                 $I->click(Locator::contains('button', 'Confirm'));
                 $I->save();
+                $I->loader();
             }
         }
 		

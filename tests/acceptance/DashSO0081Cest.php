@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO0081Cest extends Locators
+class DashSO0081Cest
 {
     protected $helper = null;
 
@@ -82,6 +82,7 @@ class DashSO0081Cest extends Locators
 
         //publish
         $I->save();
+        $I->loader();
         $I->waitForElementNotVisible('//*[contains(@class, "toast-message")]');
         $I->showonespublish();
         $I->wait(1);

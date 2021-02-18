@@ -62,6 +62,7 @@ class DashSO00273Cest
         $I->seeElement($item);
 
         $I->save();
+        $I->loader();
         $I->waitForElementClickable('(//*[@class="show-ones__header-select"])[1]');
 
         //assert Total was not changed

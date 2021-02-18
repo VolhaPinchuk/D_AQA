@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00733Cest extends BaseActions
+class DashSO00733Cest
 {
     protected $helper = null;
 
@@ -72,6 +72,7 @@ class DashSO00733Cest extends BaseActions
 		$I->click(Locator::contains('button', 'Confirm'));
 		//save changes
 		$I->save();
+        $I->loader();
 		
 		//EDIT ONES\
 		//expand 
@@ -95,6 +96,7 @@ class DashSO00733Cest extends BaseActions
                 $I->click(Locator::contains('button', 'Confirm'));
                 $I->waitForElementNotVisible('.toast-message');
                 $I->save();
+                $I->loader();
             }
         }		
 				

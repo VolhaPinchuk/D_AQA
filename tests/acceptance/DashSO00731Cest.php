@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00731Cest extends BaseActions
+class DashSO00731Cest
 {
     protected $helper = null;
 
@@ -73,6 +73,7 @@ class DashSO00731Cest extends BaseActions
 		
 		//save changes
 		$I->save();
+        $I->loader();
 		
 		//assert check message
 		$I->waitForElementVisible('.toast-message', 20);

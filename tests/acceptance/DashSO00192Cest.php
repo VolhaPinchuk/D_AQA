@@ -62,7 +62,8 @@ class DashSO00192Cest
             $I->assertEquals($disciplineTitle, $shownDisciplineTitle, 'Another discipline was shown');
 
             $I->click('//*[contains(@id, "v-filter-select")]');
-            $I->seeElement('.select-all');
+            $elements = $this->helper->findElements('.select-all');
+            $I->executeJS("arguments[0].scrollIntoView(false);", $elements);
             $I->click('.select-all');
             $I->click('.select-all');
             $I->click('//*[contains(@id, "v-filter-select")]');

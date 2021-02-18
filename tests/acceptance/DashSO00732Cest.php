@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class DashSO00732Cest extends BaseActions
+class DashSO00732Cest
 {
     protected $helper = null;
 
@@ -74,6 +74,7 @@ class DashSO00732Cest extends BaseActions
 		$I->click(Locator::contains('button', 'Confirm'));
 		//save changes
 		$I->save();
+        $I->loader();
 		
 		//DELETE ONES
 		//find number of the end position in the first department
@@ -90,8 +91,7 @@ class DashSO00732Cest extends BaseActions
                 $I->click(Locator::contains('button', 'Remove Ones'));
                 $I->click(Locator::contains('button', 'Confirm'));
                 $I->waitForElementNotVisible('.toast-message');
-                $I->click(Locator::contains('button', 'File'));
-                $I->click(Locator::contains('span', 'Save'));
+                $I->save();
                 $I->loader();
             }
         }		

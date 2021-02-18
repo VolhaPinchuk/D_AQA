@@ -49,6 +49,7 @@ class DashSO0026Cest
         //add random grey mark
         list ($a, $b) = $I->addrandomgreymark($i, $columnsNumber);
         $I->save();
+        $I->loader();
 
         //remove mark
         for ($k = 1; $k <= $i-1; $k++){
@@ -61,8 +62,7 @@ class DashSO0026Cest
                 $I->click(Locator::contains('button', 'Remove Ones'));
                 $I->click(Locator::contains('button', 'Confirm'));
                 $I->waitForElementNotVisible('.toast-message');
-                $I->click(Locator::contains('button', 'File'));
-                $I->click(Locator::contains('span', 'Save'));
+                $I->save();
                 $I->loader();
             }
         }

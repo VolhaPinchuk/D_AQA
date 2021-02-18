@@ -68,6 +68,7 @@ class DashSO00121Cest
 
         //save mark
         $I->save();
+        $I->loader();
 
         //check mark was saved
         $totalAfterSave = $I->grabTextFrom('(//*[@class="item__info__department-seniority-split"])[1]');

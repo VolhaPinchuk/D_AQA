@@ -5,7 +5,7 @@ use Codeception\Util\Locator;
 use Codeception\Util\Shared\Asserts;
 use Helper\Acceptance;
 
-class Dash000PreconditionCest extends Locators
+class Dash000PreconditionCest
 {
     protected $helper = null;
 

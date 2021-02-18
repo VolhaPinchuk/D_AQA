@@ -7,7 +7,7 @@ use Helper\Acceptance;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 
-class DashSO00683Cest extends BaseActions
+class DashSO00683Cest
 {
 	protected $helper = null;
 	
@@ -74,6 +74,7 @@ class DashSO00683Cest extends BaseActions
 		$I->click(Locator::contains('button', 'Confirm'));
 		//save changes
 		$I->save();
+        $I->loader();
 		$I->waitForElementNotVisible('.toast-message', 20);
 		
 		//publish
@@ -113,6 +114,7 @@ class DashSO00683Cest extends BaseActions
 				$I->waitForElementVisible(Locator::contains('button', 'Confirm'));
                 $I->click(Locator::contains('button', 'Confirm'));
                 $I->save();
+                $I->loader();
 				$I->waitForElementNotVisible('.toast-message', 20);
             }
         }	

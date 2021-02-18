@@ -7,7 +7,7 @@ use Helper\Acceptance;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 
-class DashSO00681Cest extends BaseActions
+class DashSO00681Cest
 {
 	protected $helper = null;
 	
@@ -74,6 +74,7 @@ class DashSO00681Cest extends BaseActions
 		$I->click(Locator::contains('button', 'Confirm'));
 		//save changes
 		$I->save();
+        $I->loader();
 		$I->waitForElementNotVisible('.toast-message', 20);
 		
 		//find number of the end position in the first department
