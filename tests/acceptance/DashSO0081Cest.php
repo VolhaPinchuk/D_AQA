@@ -27,24 +27,7 @@ class DashSO0081Cest
         $I->loader();
 
         //clear shopping cart
-        $I->deptpublish();
-        try{
-            $I->elementIsHere('//*[@id="publishPopup"]');
-            $I->waitForElementClickable('//*[@id="publishPopup"]//button[contains(text(), "Yes, Publish")]');
-            $I->click('//*[@id="publishPopup"]//button[contains(text(), "Yes, Publish")]');
-        }
-        catch (\Exception $exception) {
-            $I->waitForElementClickable('//*[@id="publishWarningPopup"]//button[contains(text(), "Yes, Publish")]');
-            $I->click('//*[@id="publishWarningPopup"]//button[contains(text(), "Yes, Publish")]');
-            $I->loader();
-            $popup = $I->elementIsHere('//*[@id="publishOnesPrioritiesPopup"]');
-            if ($popup === true) {
-                $I->waitForElementClickable('//*[@id="publishOnesPrioritiesPopup"]//button[contains(text(), "Yes, Publish")]');
-                $I->click('//*[@id="publishOnesPrioritiesPopup"]//button[contains(text(), "Yes, Publish")]');
-            }
-        }
-        $I->loader();
-        $I->waitForElementNotVisible('//*[contains(@class, "toast-message")]');
+        $I->clearcart();
 
         //logout
         $I->logout();

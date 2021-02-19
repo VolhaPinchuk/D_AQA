@@ -132,7 +132,6 @@ class DashAcceptanceTester extends AcceptanceTester
         $this->click(Locator::contains('button', 'File'));
         $this->waitForElementClickable(Locator::contains('span', 'Save'), 20);
         $this->click(Locator::contains('span', 'Save'));
-        $this->loader();
     }
 
     public function showonespublish(){
@@ -160,6 +159,62 @@ class DashAcceptanceTester extends AcceptanceTester
         $this->click('//*[contains(@class, "left")]//*[contains(@class, "next")]');
         $this->click('//*[contains(@class, "left")]//tr[3]/td[1]');
         $this->click('//*[contains(@class, "right")]//tr[6]/td[7]');
+    }
+
+    public function addpositionindept(){
+        $this->waitForElementClickable('.fa-user-plus', 20);
+        $this->click('.fa-user-plus');
+        //select type = CH
+        $this->waitForElementVisible('(//*[@id="vueAddPositionsPopup"]//*[contains(@type,"button")])[2]', 20);
+        $this->click('(//*[@id="vueAddPositionsPopup"]//*[contains(@type,"button")])[2]');
+        $this->waitForElementClickable('//li[contains(@value, "CH")]', 20);
+        $this->click('//li[contains(@value, "CH")]');
+        //select Seniority = Lead
+        $this->waitForElementClickable('(//*[@id="vueAddPositionsPopup"]//*[contains(@type,"button")])[3]', 20);
+        $this->click('(//*[@id="vueAddPositionsPopup"]//*[contains(@type,"button")])[3]');
+        $this->waitForElementVisible('(//li[contains(@value, "Lead")])[2]', 20);
+        $this->click('(//li[contains(@value, "Lead")])[2]');
+        //set salary
+        $this->waitForElementClickable('(//*[@id="vueAddPositionsPopup"]//input[contains(@type,"text")])[3]', 20);
+        $sel_val = $this->grabValueFrom('(//*[@id="vueAddPositionsPopup"]//input[contains(@type,"text")])[3]');
+        echo('Salary is: ' . $sel_val . "\n");
+        if ($sel_val <= 0) {
+            $this->fillField('(//*[@id="vueAddPositionsPopup"]//input[contains(@type,"text")])[3]', '17000');
+        }
+        //select start date
+        $this->waitForElementClickable('(//*[@id="vueAddPositionsPopup"]//input[contains(@type,"text")])[4]', 20);
+        $this->click('(//*[@id="vueAddPositionsPopup"]//input[contains(@type,"text")])[4]');
+        $this->waitForElementVisible('.today', 20);
+        $this->click('.today');
+        //select end date
+        $this->waitForElementClickable('(//*[@id="vueAddPositionsPopup"]//input[contains(@type,"text")])[5]', 20);
+        $this->click('(//*[@id="vueAddPositionsPopup"]//input[contains(@type,"text")])[5]');
+        $this->waitForElementVisible('//tr[5]/td[7]', 20);
+        $this->click('//tr[5]/td[7]');
+        //Add
+        $this->waitForElementClickable('//*[@id="vueAddPositionsPopup"]//button[contains(text(),"Add")]', 20);
+        $this->click('//*[@id="vueAddPositionsPopup"]//button[contains(text(),"Add")]');
+    }
+
+    public function clearcart(){
+        $this->deptpublish();
+        try{
+            $this->elementIsHere('//*[@id="publishPopup"]');
+            $this->waitForElementClickable('//*[@id="publishPopup"]//button[contains(text(), "Yes, Publish")]');
+            $this->click('//*[@id="publishPopup"]//button[contains(text(), "Yes, Publish")]');
+        }
+        catch (\Exception $exception) {
+            $this->waitForElementClickable('//*[@id="publishWarningPopup"]//button[contains(text(), "Yes, Publish")]');
+            $this->click('//*[@id="publishWarningPopup"]//button[contains(text(), "Yes, Publish")]');
+            $this->loader();
+            $popup = $this->elementIsHere('//*[@id="publishOnesPrioritiesPopup"]');
+            if ($popup === true) {
+                $this->waitForElementClickable('//*[@id="publishOnesPrioritiesPopup"]//button[contains(text(), "Yes, Publish")]');
+                $this->click('//*[@id="publishOnesPrioritiesPopup"]//button[contains(text(), "Yes, Publish")]');
+            }
+        }
+        $this->loader();
+        $this->waitForElementNotVisible('//*[contains(@class, "toast-message")]');
     }
 
     public function assertContains($a, $b, $text){
